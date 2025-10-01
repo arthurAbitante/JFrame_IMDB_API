@@ -12,7 +12,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
@@ -27,6 +29,7 @@ public class TelaFilmesTabela extends javax.swing.JFrame  {
     private static final String BASE_URL = "https://api.themoviedb.org/3";
     private JTable tabela;
     private MovieTableModel modelo;
+    private JLabel imagem;
     
     public TelaFilmesTabela(){
          
@@ -35,8 +38,15 @@ public class TelaFilmesTabela extends javax.swing.JFrame  {
         tabela = new JTable(modelo);
         JScrollPane scroll = new JScrollPane(tabela);
         
+       // ImageIcon icon = new ImageIcon("");
+       // imagem = new JLabel(icon);
+        
+        tabela.getSelectionModel().addListSelectionListener(e -> insertImage(returnMovieResponse()));
+
+        scroll.add(new JLabel());
         setLayout(new BorderLayout());
         add(scroll, BorderLayout.CENTER);
+        
         
         setTitle("CRUD Clientes da Cantina");
         setSize(900, 500);
@@ -48,7 +58,7 @@ public class TelaFilmesTabela extends javax.swing.JFrame  {
         
     }
     
-    public List<Movie> returnMovieResponse(){
+    private List<Movie> returnMovieResponse(){
         List<Movie> res = new ArrayList<Movie>();
         
         try {
@@ -85,6 +95,22 @@ public class TelaFilmesTabela extends javax.swing.JFrame  {
         }
         return res;
     }
+    
+ 
+  
+    private void insertImage(List<Movie> movieResponseList){
+        int row = tabela.getSelectedRow();
+        String posterPath = "";
+        if (row >= 0) {
+            posterPath = movieResponseList.get(row).poster_path;
+            ImageIcon icon = new ImageIcon(posterPath);
+            imagem = new JLabel(icon);
+        }
+    }
+    
+    
+    
+    
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(TelaFilmesTabela.class.getName());
 
